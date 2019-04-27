@@ -8,4 +8,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Arena.unity
     guid: eab9b614e55abae42a244a1fd263ab90
+  - enabled: 1
+    path: Assets/Scenes/Barracks.unity
+    guid: 6de58104327ef21429a9a529e9703d8f
   m_configObjects: {}

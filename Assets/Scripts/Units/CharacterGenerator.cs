@@ -9,7 +9,22 @@ public static class CharacterGenerator
             Health = 5,
             Speed = 5,
             Hype = 0,
-            LifeValue = 100
+            LifeValue = 100,
+            Weapon = new ItemData {
+                Name = "Shitty Sword",
+                Strength = 1,
+                Health = 0,
+                Speed = 0,
+                Rarity = 0
+            },
+            Armor = new ItemData
+            {
+                Name = "Leather scraps",
+                Strength = 0,
+                Health = 1,
+                Speed = 0,
+                Rarity = 3
+            }
         };
 
         for(int i = 0; i < extraStats; i++) {

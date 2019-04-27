@@ -14,9 +14,6 @@ public class GameManager : MonoBehaviour
 
     public static GameManager instance;
 
-    [Header("Debug Settings")]
-    [SerializeField] private bool debugMode;
-
     [Header("References")]
     [SerializeField] private GameObject playerPrefab;
     [SerializeField] private GameObject enemyPrefab;
@@ -28,42 +25,33 @@ public class GameManager : MonoBehaviour
 
 
     // References
-    public UnitData playerData { get; private set; }
+    public UnitData PlayerData { get; private set; }
 
 
     private void Awake() {
         if(instance == null) {
             instance = this;
             DontDestroyOnLoad(gameObject);
+
+            // Generate the player
+            PlayerData = CharacterGenerator.GenerateCharacter(0);
+            numberOfFights = 0;
+
+            SceneManager.sceneLoaded -= OnSceneLoaded;
+            SceneManager.sceneLoaded += OnSceneLoaded;
         }
         else {
             Destroy(this.gameObject);
         }
-        // Generate the player
-        playerData = CharacterGenerator.GenerateCharacter(0);
-        numberOfFights = 0;
-
-        SceneManager.sceneLoaded += OnSceneLoaded;
-
     }
 
     // Start is called before the first frame update
     void OnSceneLoaded(Scene scene, LoadSceneMode mode) {
-
-        // Check if debug mode, otherwise we start on the correct scene
-        if(debugMode) {
-            // Start the arena if we are debugging
-            if(SceneManager.GetActiveScene().name == "Arena")
-                StartArena();
-        }
-        else {
-            // Start the real game with the correct scene
-            if(SceneManager.GetActiveScene().name == "Arena")
-                StartArena();
-            else if(SceneManager.GetActiveScene().name == "Barracks")
-                StartBarracks();
-
-        }
+        // Start the real game with the correct scene
+        if(SceneManager.GetActiveScene().name == "Arena")
+            StartArena();
+        else if(SceneManager.GetActiveScene().name == "Barracks")
+            StartBarracks();
     }
 
     /// <summary>
@@ -76,7 +64,7 @@ public class GameManager : MonoBehaviour
         // Spawn the player on the map
         GameObject playerGO = Instantiate(playerPrefab, Vector3.zero, Quaternion.identity);
         Gladiator playerGlad = playerGO.GetComponent<Gladiator>();
-        playerGlad.SetUnitData(playerData);
+        playerGlad.SetUnitData(PlayerData);
         playerGO.name = "Player";
         player = playerGlad;
         LivingGladiators.Add(playerGlad);
@@ -91,12 +79,13 @@ public class GameManager : MonoBehaviour
             LivingGladiators.Add(enemyGO.GetComponent<Gladiator>());
         }
 
+        UIManager.instance.EnableStats(false);
         // Start the arena loop
         StartCoroutine(ArenaLoop());
     }
 
     void StartBarracks() {
-
+        UIManager.instance.EnableStats(true);
     }
 
     private IEnumerator ArenaLoop() {
@@ -110,9 +99,7 @@ public class GameManager : MonoBehaviour
 
         numberOfFights++;
 
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-
-        StartArena();
+        SceneManager.LoadScene("Barracks");
         // Stop the arena
     }
 }

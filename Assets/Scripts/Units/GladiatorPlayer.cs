@@ -15,12 +15,10 @@ public class GladiatorPlayer : Gladiator
 
         if(IsAlive) {
             if(Input.GetButton("Fire1") && canAttack) {
-                if(playerTargets.ValidTargets.Any()) {
-                    Attack(playerTargets.ValidTargets.FirstOrDefault());
+
+                foreach(var target in playerTargets.ValidTargets) {
+                    Attack(target);
                 }
-                //else {
-                //    Attack();
-                //}
             }
         }
 
@@ -34,7 +32,6 @@ public class GladiatorPlayer : Gladiator
             transform.Rotate(new Vector3(0f, Input.GetAxis("Horizontal") * 4f, 0f));
 
             animator.SetFloat("Move", Input.GetAxis("Vertical"));
-
             animator.SetBool("Standing", Mathf.Abs(Input.GetAxis("Vertical")) < 0.05f);
         }
     }

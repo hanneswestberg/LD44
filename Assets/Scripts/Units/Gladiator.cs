@@ -60,7 +60,7 @@ public class Gladiator : MonoBehaviour
 
         leftArm.localScale = Vector3.one + (Vector3.one * 0.05f * Data.Strength) - (Vector3.one * 0.25f);
         rightArm.localScale = Vector3.one + (Vector3.one * 0.05f * Data.Strength) - (Vector3.one * 0.25f);
-        graphics.localScale = Vector3.one + (Vector3.one * 0.05f * Data.Strength);
+        graphics.localScale = Vector3.one + (Vector3.one * 0.05f * Random.Range(-3f, Data.Strength));
     }
 
     protected virtual void Update() {
