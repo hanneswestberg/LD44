@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   debugMode: 1
-  playerPrefab: {fileID: 8382983566202803833, guid: fffe06647b987924a8de0fa25da92a37,
+  playerPrefab: {fileID: 3976115693882786461, guid: c3f31543a62374e46ad45c09c113769e,
     type: 3}
-  enemyPrefab: {fileID: 8382983566202803833, guid: fffe06647b987924a8de0fa25da92a37,
+  enemyPrefab: {fileID: 3886811596740141962, guid: 73c2086f08e411743b25fe8f55daf16b,
     type: 3}

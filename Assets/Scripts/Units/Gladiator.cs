@@ -19,14 +19,24 @@ public class Gladiator : MonoBehaviour
 
     // Internal references
     [Header("Internal References:")]
-    [SerializeField] private Animator animator;
-    [SerializeField] private AudioSource audioSource;
-    [SerializeField] private SimpleAudioEvent attackSound;
-    [SerializeField] private SimpleAudioEvent takeDamageSound;
-    [SerializeField] private SimpleAudioEvent dieSound;
+    [SerializeField] protected Animator animator;
+    [SerializeField] protected AudioSource audioSource;
+    [SerializeField] protected SimpleAudioEvent attackSound;
+    [SerializeField] protected SimpleAudioEvent takeDamageSound;
+    [SerializeField] protected SimpleAudioEvent dieSound;
+    [SerializeField] protected Canvas healthBarCanvas;
+    [SerializeField] protected RectTransform healthBar;
+
+    [Header("Settings:")]
+    [SerializeField, Range(0f, 5f)] protected float attackDistance;
+    [SerializeField, Range(0f, 5f)] protected float attackCooldown;
+
 
     // Internal variables
-    private float maxHealth;
+    protected float maxHealth;
+    protected float currentAttackCooldown;
+    protected bool canAttack;
+
 
     /// <summary>
     /// Initializes the data on this unit
@@ -41,6 +51,14 @@ public class Gladiator : MonoBehaviour
         CurrentHealth = maxHealth;
 
         IsAlive = true;
+
+        // UI
+        healthBarCanvas.enabled = false;
+    }
+
+    protected virtual void Update() {
+        currentAttackCooldown -= Time.deltaTime;
+        canAttack = (currentAttackCooldown < 0);
     }
 
     /// <summary>
@@ -48,6 +66,8 @@ public class Gladiator : MonoBehaviour
     /// </summary>
     /// <param name="target">The target gladiator</param>
     public virtual void Attack(Gladiator target) {
+        currentAttackCooldown = attackCooldown;
+
         if(IsAlive && target.TakeDamage(Data.Strength * 2f)) {
             attackSound.Play(audioSource);
         }
@@ -74,6 +94,11 @@ public class Gladiator : MonoBehaviour
                 takeDamageSound.Play(audioSource);
                 animator.SetTrigger("TakeDamage");
             }
+
+            // Update UI
+            healthBarCanvas.enabled = (CurrentHealth < maxHealth && IsAlive);
+            healthBar.sizeDelta = new Vector2((CurrentHealth / maxHealth) * 100f, healthBar.sizeDelta.y);
+
             return true;
         }
         return false;

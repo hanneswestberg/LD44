@@ -2,21 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UI;
 using System.Linq;
 
 [RequireComponent(typeof(NavMeshAgent))]
 public class GladiatorAI : Gladiator
 {
-    [Header("AI Settings:")]
-    [SerializeField, Range(0f, 5f)] private float attackDistance;
-    [SerializeField, Range(0f, 5f)] private float attackCooldown;
-
-    [Header("Navigation:")]
+    [Header("AI References:")]
     [SerializeField] private NavMeshAgent navMeshAgent;
 
     // Internal variables
     private Gladiator currentTarget;
-    private float currentAttackCooldown;
 
     public override void SetUnitData(UnitData data) {
         base.SetUnitData(data);
@@ -26,7 +22,8 @@ public class GladiatorAI : Gladiator
     }
 
     // Update is called once per frame
-    void Update() {
+    protected override void Update() {
+        base.Update();
 
         if(IsAlive) {
             // First we find a target if we don't have any
@@ -38,11 +35,10 @@ public class GladiatorAI : Gladiator
 
             if(currentTarget != null) {
                 // If we are close enough to attack
-                if(Vector3.Distance(transform.position, currentTarget.transform.position) < attackDistance && currentAttackCooldown < 0) {
+                if(Vector3.Distance(transform.position, currentTarget.transform.position) < attackDistance && canAttack) {
                     Attack(currentTarget);
-                    currentAttackCooldown = attackCooldown;
                 }
-                else if(currentAttackCooldown > 0) {
+                else if(!canAttack) {
                     navMeshAgent.SetDestination(transform.position + (transform.position - currentTarget.transform.position).normalized);
                 }
                 else {
@@ -53,9 +49,6 @@ public class GladiatorAI : Gladiator
         else {
             navMeshAgent.isStopped = true;
         }
-
-        // Update timers
-        currentAttackCooldown -= Time.deltaTime;
     }
 
     private void OnDrawGizmos() {

@@ -25,7 +25,7 @@ public class GameManager : MonoBehaviour
     public List<Gladiator> LivingGladiators { get; private set; }
 
     // References
-    private UnitData playerData;
+    public UnitData playerData { get; private set; }
 
 
     private void Awake() {
@@ -72,7 +72,7 @@ public class GameManager : MonoBehaviour
         for(int i = 0; i < 4; i++) {
             NavMeshHit hit;
             NavMesh.SamplePosition(Random.insideUnitSphere * 15f, out hit, Mathf.Infinity, NavMesh.AllAreas);
-            GameObject enemyGO = Instantiate(enemyPrefab, hit.position, Quaternion.identity);
+            GameObject enemyGO = Instantiate(enemyPrefab, hit.position + Vector3.up, Quaternion.identity);
             enemyGO.GetComponent<Gladiator>().SetUnitData(CharacterGenerator.GenerateCharacter());
             enemyGO.name = string.Format("Gladiator Enemy {0}", i);
             LivingGladiators.Add(enemyGO.GetComponent<Gladiator>());
