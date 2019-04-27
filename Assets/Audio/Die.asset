@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57bc5d08ca2e13440ace9bcd3c49846f, type: 3}
+  m_Name: Die
+  m_EditorClassIdentifier: 
+  clips:
+  - {fileID: 8300000, guid: 1b55c22a7f9790e4391aba537cd513ea, type: 3}
+  - {fileID: 8300000, guid: 87afa5666b0a83e4b84f8b5eb1495248, type: 3}
+  - {fileID: 8300000, guid: 53416b32aef43de41871a2cfbadaad73, type: 3}
+  - {fileID: 8300000, guid: 6eaec22da0c9f7341bf1146928904bd9, type: 3}
+  volume:
+    minValue: 0.26839212
+    maxValue: 0.45091304
+  pitch:
+    minValue: 0.65306336
+    maxValue: 0.8989753

@@ -26,6 +26,9 @@ public class Gladiator : MonoBehaviour
     [SerializeField] protected SimpleAudioEvent dieSound;
     [SerializeField] protected Canvas healthBarCanvas;
     [SerializeField] protected RectTransform healthBar;
+    [SerializeField] protected Transform leftArm;
+    [SerializeField] protected Transform rightArm;
+    [SerializeField] protected Transform graphics;
 
     [Header("Settings:")]
     [SerializeField, Range(0f, 5f)] protected float attackDistance;
@@ -54,6 +57,10 @@ public class Gladiator : MonoBehaviour
 
         // UI
         healthBarCanvas.enabled = false;
+
+        leftArm.localScale = Vector3.one + (Vector3.one * 0.05f * Data.Strength) - (Vector3.one * 0.25f);
+        rightArm.localScale = Vector3.one + (Vector3.one * 0.05f * Data.Strength) - (Vector3.one * 0.25f);
+        graphics.localScale = Vector3.one + (Vector3.one * 0.05f * Data.Strength);
     }
 
     protected virtual void Update() {
@@ -65,10 +72,12 @@ public class Gladiator : MonoBehaviour
     /// Attacks a target
     /// </summary>
     /// <param name="target">The target gladiator</param>
-    public virtual void Attack(Gladiator target) {
+    public virtual void Attack(Gladiator target = null) {
         currentAttackCooldown = attackCooldown;
 
-        if(IsAlive && target.TakeDamage(Data.Strength * 2f)) {
+        animator.SetTrigger("Attack");
+
+        if(IsAlive && target != null && target.TakeDamage(Data.Strength * 2f)) {
             attackSound.Play(audioSource);
         }
     }
@@ -87,8 +96,10 @@ public class Gladiator : MonoBehaviour
                 dieSound.Play(audioSource);
                 animator.SetBool("Dead", true);
                 GameManager.instance.LivingGladiators.Remove(this);
+                GetComponent<CapsuleCollider>().enabled = false;
+                GetComponent<Rigidbody>().isKinematic = true;
 
-                transform.GetChild(0).rotation = new Quaternion(90f, transform.rotation.y, transform.rotation.z, 0);
+                //transform.GetChild(0).rotation = new Quaternion(90f, transform.rotation.y, transform.rotation.z, 0);
             }
             else {
                 takeDamageSound.Play(audioSource);

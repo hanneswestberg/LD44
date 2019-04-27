@@ -35,7 +35,7 @@ public class GladiatorAI : Gladiator
 
             if(currentTarget != null) {
                 // If we are close enough to attack
-                if(Vector3.Distance(transform.position, currentTarget.transform.position) < attackDistance && canAttack) {
+                if(Vector3.Distance(transform.position, currentTarget.transform.position) < attackDistance && canAttack && Vector3.Angle(transform.forward, currentTarget.transform.position) < 90f) {
                     Attack(currentTarget);
                 }
                 else if(!canAttack) {
@@ -44,6 +44,7 @@ public class GladiatorAI : Gladiator
                 else {
                     navMeshAgent.SetDestination(currentTarget.transform.position);
                 }
+                animator.SetFloat("Move", navMeshAgent.velocity.magnitude);
             }
         }
         else {

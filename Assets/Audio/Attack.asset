@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 57bc5d08ca2e13440ace9bcd3c49846f, type: 3}
-  m_Name: Test
+  m_Name: Attack
   m_EditorClassIdentifier: 
   clips:
   - {fileID: 8300000, guid: 5f688e13957726f449663328b97fb85c, type: 3}

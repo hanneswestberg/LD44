@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class UIManager : MonoBehaviour
 {
     public static UIManager instance;
+    private UnitData playerData;
 
     [Header("Settings:")]
     [SerializeField] private Button toggleMusicButton;
@@ -33,6 +34,12 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        playerData = GameManager.instance.playerData;
+        updateUI();
+    }
+
     public void ToggleMusic() {
         isMusicOn = !isMusicOn;
         // Do stuff here
@@ -41,5 +48,14 @@ public class UIManager : MonoBehaviour
     public void ToggleSounds() {
         isSoundOn = !isSoundOn;
         // Do stuff here
+    }
+
+    public void updateUI()
+    {
+        playerValue.text = "Value " + playerData.LifeValue + " denarii";
+        playerHype.text = "Hype " + playerData.Hype + "x";
+        playerStatStrength.text = "Strength " + playerData.Strength;
+        playerStatHealth.text = "Health " + playerData.Health;
+        playerStatSpeed.text = "Speed " + playerData.Speed;
     }
 }

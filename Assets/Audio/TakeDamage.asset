@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57bc5d08ca2e13440ace9bcd3c49846f, type: 3}
+  m_Name: TakeDamage
+  m_EditorClassIdentifier: 
+  clips:
+  - {fileID: 8300000, guid: 15918b20cb7e5914f86825163db35f1a, type: 3}
+  - {fileID: 8300000, guid: b04e94aaad6a25c4597f1266b3a39019, type: 3}
+  - {fileID: 8300000, guid: 215d3abda2e31bf41b353d814b10ae79, type: 3}
+  - {fileID: 8300000, guid: 968edee56730fec4786ce4bed6f96592, type: 3}
+  volume:
+    minValue: 0.20387597
+    maxValue: 0.49392378
+  pitch:
+    minValue: 0.79929984
+    maxValue: 1.0366094
