@@ -3246,12 +3246,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1473324070}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1999865492 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7596710409847757517, guid: fe53740c97bdc594498279b349d9feea,
-    type: 3}
-  m_PrefabInstance: {fileID: 2092417240}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2050395357
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3518,21 +3512,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: UIManager
       objectReference: {fileID: 0}
-    - target: {fileID: 630084871685304147, guid: fe53740c97bdc594498279b349d9feea,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7596710409847757517, guid: fe53740c97bdc594498279b349d9feea,
-        type: 3}
-      propertyPath: m_Name
-      value: StatsFrame
-      objectReference: {fileID: 0}
-    - target: {fileID: 7596710409847757517, guid: fe53740c97bdc594498279b349d9feea,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 7596710409637309882, guid: fe53740c97bdc594498279b349d9feea,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -3588,11 +3567,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3497712206192555223, guid: fe53740c97bdc594498279b349d9feea,
-        type: 3}
-      propertyPath: playerStats
-      value: 
-      objectReference: {fileID: 1999865492}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fe53740c97bdc594498279b349d9feea, type: 3}
 --- !u!1001 &327768703884565817

@@ -11,10 +11,10 @@ public class ItemUI : MonoBehaviour
     private RectTransform pos;
 
     private Color[] rarityColors = new Color[] {
-        new Color(0.80f, 0.50f, 0.20f), // bronze
-        new Color(0.75f, 0.75f, 0.75f), // silver
-        new Color(1.0f, 0.84f, 0.0f), // gold
-        new Color(0.44f, 0.82f, 0.88f) // diamond blue
+        new Color(0.5f, 0.5f, 0.5f), // gray
+        new Color(0.0f, 0.90f, 0.25f), // green
+        new Color(0.65f, 0.22f, 0.99f), // gold
+        new Color(0.01f, 0.71f, 1.0f) // diamond blue
     };
 
     public void NewValues(ItemData data, float offset = 0)
@@ -24,8 +24,11 @@ public class ItemUI : MonoBehaviour
         Name.text = data.Name;
         Name.color = rarityColors[data.Rarity];
         Strength.text = "Str " + data.Strength;
+        Strength.color = (data.Strength > 0) ? Color.green : Color.red;
         Health.text = "Hp " + data.Health;
+        Health.color = (data.Health > 0) ? Color.green : Color.red;
         Speed.text = "Spd " + data.Speed;
+        Speed.color = (data.Speed > 0) ? Color.green : Color.red;
 
         pos.anchoredPosition = new Vector2(0, offset);
     }

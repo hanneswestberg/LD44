@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57bc5d08ca2e13440ace9bcd3c49846f, type: 3}
+  m_Name: UI Lift - Fail
+  m_EditorClassIdentifier: 
+  clips:
+  - {fileID: 8300000, guid: 8a27f7335dc048140b66aeb6b6fe0890, type: 3}
+  - {fileID: 8300000, guid: 902cc967235b76d4399209529a796e60, type: 3}
+  - {fileID: 8300000, guid: 3b5db11db897ae04daa678d53c915ee9, type: 3}
+  volume:
+    minValue: 0.346148
+    maxValue: 0.6749974
+  pitch:
+    minValue: 0.8831905
+    maxValue: 0.99978375

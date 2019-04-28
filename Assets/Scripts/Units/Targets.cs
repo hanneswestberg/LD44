@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerTargets : MonoBehaviour
+public class Targets : MonoBehaviour
 {
 
     public List<Gladiator> ValidTargets { get; private set; }
@@ -12,13 +12,13 @@ public class PlayerTargets : MonoBehaviour
     }
 
     private void OnTriggerEnter(Collider other) {
-        if(other.gameObject.tag == "Enemy") {
+        if(other.gameObject.tag == "Enemy" || other.gameObject.tag == "Player") {
             ValidTargets.Add(other.GetComponent<Gladiator>());
         }
     }
 
     private void OnTriggerExit(Collider other) {
-        if(other.gameObject.tag == "Enemy") {
+        if(other.gameObject.tag == "Enemy" || other.gameObject.tag == "Player") {
             ValidTargets.Remove(other.GetComponent<Gladiator>());
         }
     }

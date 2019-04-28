@@ -7,28 +7,24 @@ public class GladiatorPlayer : Gladiator
 {
     [Header("Player References")]
     [SerializeField] private Rigidbody rigidbody;
-    [SerializeField] private PlayerTargets playerTargets;
 
     // Update is called once per frame
     protected override void Update() {
         base.Update();
-
+        
         if(IsAlive) {
             if(Input.GetButton("Fire1") && canAttack) {
-                foreach(var target in playerTargets.ValidTargets) {
-                    Attack(target);
-                }
+                Attack();
             }
         }
-
     }
 
     private void FixedUpdate() {
-        if(IsAlive) {
+        if(IsAlive && CanMove) {
             var moveForward = transform.forward * Input.GetAxis("Vertical");
-            rigidbody.MovePosition(transform.position + (moveForward * 0.07f) + (moveForward * 0.07f) * (0.1f * Data.Speed));
+            rigidbody.MovePosition(transform.position + (moveForward * 0.06f) + (moveForward * 0.06f) * (0.06f * (Data.Speed + Data.Weapon.Speed + Data.Armor.Speed)));
 
-            transform.Rotate(new Vector3(0f, Input.GetAxis("Horizontal") * 4f, 0f));
+            transform.Rotate(new Vector3(0f, Input.GetAxis("Horizontal") * 7f, 0f));
 
             animator.SetFloat("Move", Input.GetAxis("Vertical"));
             animator.SetBool("Standing", Mathf.Abs(Input.GetAxis("Vertical")) < 0.05f);

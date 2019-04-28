@@ -18,14 +18,16 @@ public class GladiatorAI : Gladiator
         base.SetUnitData(data);
 
         // Set speed
-        navMeshAgent.speed = 3f + (Data.Speed * 0.1f);
+        navMeshAgent.speed = 3f + ((Data.Speed + Data.Armor.Speed + Data.Weapon.Speed) * 0.1f);
     }
 
     // Update is called once per frame
     protected override void Update() {
         base.Update();
 
-        if(IsAlive) {
+        if(IsAlive && CanMove) {
+            navMeshAgent.isStopped = false;
+
             // First we find a target if we don't have any
             if(GameManager.instance != null
                 && GameManager.instance.LivingGladiators != null
@@ -36,9 +38,9 @@ public class GladiatorAI : Gladiator
             if(currentTarget != null) {
                 // If we are close enough to attack
                 if(Vector3.Distance(transform.position, currentTarget.transform.position) < attackDistance && canAttack && Vector3.Angle(transform.forward, currentTarget.transform.position) < 90f) {
-                    Attack(currentTarget);
+                    Attack();
                 }
-                else if(!canAttack) {
+                else if(!canAttack && attackFinished) {
                     navMeshAgent.SetDestination(transform.position + (transform.position - currentTarget.transform.position).normalized);
                 }
                 else {

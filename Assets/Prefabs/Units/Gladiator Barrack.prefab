@@ -988,7 +988,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c21cf65343af0d448bc5ac4b81e03eb5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  liftSound: {fileID: 11400000, guid: 56adfeca6fbdbc946ae3282f84c51bc4, type: 2}
+  liftSuccess: {fileID: 11400000, guid: 786084579cac75c4cb624935298fc3cf, type: 2}
+  liftFail: {fileID: 11400000, guid: 7a9c4df5973ef1349b89a715031dce9a, type: 2}
   liftSource: {fileID: 5974397892585058369}
   weigths:
   - {fileID: 1459708441}

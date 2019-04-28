@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57bc5d08ca2e13440ace9bcd3c49846f, type: 3}
+  m_Name: GladLift - Fail
+  m_EditorClassIdentifier: 
+  clips:
+  - {fileID: 8300000, guid: 54ee92237eb7aea42a8f3a8ef7de8998, type: 3}
+  - {fileID: 8300000, guid: 1e5c41d559532404d863498b6ac971b4, type: 3}
+  - {fileID: 8300000, guid: 8fad3871cc48fbe4aa853c630002ad7c, type: 3}
+  - {fileID: 8300000, guid: 7d98ce3b39edbfe49a46e967bdf472d1, type: 3}
+  volume:
+    minValue: 0.61344695
+    maxValue: 0.7784677
+  pitch:
+    minValue: 0.7992999
+    maxValue: 0.89864874

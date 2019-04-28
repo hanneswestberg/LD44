@@ -5,7 +5,7 @@ public class UIManager : MonoBehaviour
 {
     public static UIManager instance;
 
-    private UIOfferGenerator offerGen;
+    public UIOfferGenerator offerGenerator;
 
     [Header("Settings:")]
     [SerializeField] private Button toggleMusicButton;
@@ -44,8 +44,6 @@ public class UIManager : MonoBehaviour
 
     private void Start() {
         playerData = GameManager.instance.PlayerData;
-        offerGen = GetComponent<UIOfferGenerator>();
-        NewOffers(OfferGenerator.GenerateOffer(1), OfferGenerator.GenerateOffer(1));
 
         GameObject weapon_inst = Instantiate(itemPrefab, playerStats.transform);
         GameObject armor_inst = Instantiate(itemPrefab, playerStats.transform);
@@ -75,13 +73,13 @@ public class UIManager : MonoBehaviour
 
     public void NewOffers(OfferData off0, OfferData off1)
     {
-        offerGen.CreateOffer(off0);
-        offerGen.CreateOffer(off1);
+        offerGenerator.CreateOffer(off0);
+        offerGenerator.CreateOffer(off1);
     }
 
     public void Sold(OfferData offer)
     {
-
+        offerGenerator.CreateSold(offer);
     }
 
     public void UpdateUI()
@@ -96,21 +94,6 @@ public class UIManager : MonoBehaviour
 
         weapon.NewValues(playerData.Weapon);
         armor.NewValues(playerData.Armor, -70);
-        /*
-        // weapon
-        playerWeaponName.text = playerData.Weapon.Name;
-        playerWeaponName.color = rarityColors[playerData.Weapon.Rarity];
-        playerWeaponStrength.text = "Str " + playerData.Weapon.Strength;
-        playerWeaponHealth.text = "Hp " + playerData.Weapon.Health;
-        playerWeaponSpeed.text = "Spd " + playerData.Weapon.Speed;
-
-        // armor
-        playerArmorName.text = playerData.Armor.Name;
-        playerArmorName.color = rarityColors[playerData.Armor.Rarity];
-        playerArmorStrength.text = "Str " + playerData.Armor.Strength;
-        playerArmorHealth.text = "Hp " + playerData.Armor.Health;
-        playerArmorSpeed.text = "Spd " + playerData.Armor.Speed;
-        */
     }
 
 }

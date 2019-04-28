@@ -20,6 +20,8 @@ public class Gladiator : MonoBehaviour
     /// </summary>
     public bool IsAlive { get; private set; }
 
+    public bool CanMove { get; set; }
+
     // Internal references
     [Header("Internal References:")]
     [SerializeField] protected Animator animator;
@@ -45,6 +47,8 @@ public class Gladiator : MonoBehaviour
     [SerializeField, Range(0f, 5f)] protected float attackDistance;
     [SerializeField, Range(0f, 5f)] protected float attackCooldown;
 
+    [SerializeField] private Targets targets;
+
 
     public Action OnUnitKilled;
 
@@ -53,6 +57,7 @@ public class Gladiator : MonoBehaviour
     protected float maxHealth;
     protected float currentAttackCooldown;
     protected bool canAttack;
+    protected bool attackFinished = false;
 
 
     /// <summary>
@@ -63,7 +68,7 @@ public class Gladiator : MonoBehaviour
         Data = data;
 
         // TODO: Calculate max health here
-        maxHealth = Data.Health * 10f;
+        maxHealth = (Data.Health + Data.Armor.Health + Data.Weapon.Health) * 8f;
         // TODO: Set current health to max health
         CurrentHealth = maxHealth;
 
@@ -74,9 +79,9 @@ public class Gladiator : MonoBehaviour
         healthValue.text = CurrentHealth.ToString();
         nameText.text = Data.Name;
 
-        leftArm.localScale = Vector3.one + (Vector3.one * 0.05f * Data.Strength) - (Vector3.one * 0.25f);
-        rightArm.localScale = Vector3.one + (Vector3.one * 0.05f * Data.Strength) - (Vector3.one * 0.25f);
-        graphics.localScale = Vector3.one + (Vector3.one * 0.05f * Data.Strength) - (Vector3.one * 0.25f);
+        leftArm.localScale = Vector3.one + (Vector3.one * 0.1f * Data.Strength) - (Vector3.one * 0.5f);
+        rightArm.localScale = Vector3.one + (Vector3.one * 0.1f * Data.Strength) - (Vector3.one * 0.5f);
+        graphics.localScale = Vector3.one + (Vector3.one * 0.02f * Data.Strength) - (Vector3.one * 0.25f);
 
         body.materials[1].color = Data.SkinColor;
         foreach(var bodyPart in bodyParts) {
@@ -93,14 +98,24 @@ public class Gladiator : MonoBehaviour
     /// Attacks a target
     /// </summary>
     /// <param name="target">The target gladiator</param>
-    public virtual void Attack(Gladiator target = null) {
-        currentAttackCooldown = attackCooldown;
-
+    public virtual void Attack() {
+        attackFinished = false;
         animator.SetTrigger("Attack");
+        StartCoroutine(DelayedAttack());
+        currentAttackCooldown = attackCooldown;
+    }
 
-        if(IsAlive && target != null && target.TakeDamage(this, Data.Strength * 2f)) {
-            attackSound.Play(audioSource);
+    private IEnumerator DelayedAttack()
+    {
+        yield return new WaitForSeconds(.55f);
+        foreach (var target in targets.ValidTargets)
+        {
+            if (IsAlive && target != null && target.TakeDamage(this, (Data.Strength + Data.Armor.Strength + Data.Weapon.Strength) * 2f))
+            {
+                attackSound.Play(audioSource);
+            }
         }
+        attackFinished = true;
     }
 
     /// <summary>

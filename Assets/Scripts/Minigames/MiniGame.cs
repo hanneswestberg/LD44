@@ -26,6 +26,12 @@ public class MiniGame : MonoBehaviour
     [SerializeField] private Text countText;
     [SerializeField] private Text statusText;
 
+    [Space(10)]
+    [SerializeField] private SimpleAudioEvent uiSound; 
+    [SerializeField] private SimpleAudioEvent succeedSound;
+    [SerializeField] private SimpleAudioEvent failSound;
+    [SerializeField] private AudioSource soundScource;
+
     // Internal variables
     protected int results;
     protected int resultsStrength;
@@ -45,6 +51,7 @@ public class MiniGame : MonoBehaviour
     public virtual void ButtonStart() {
         tutorialPanel.SetActive(false);
         miniGameParent.SetActive(true);
+        uiSound.Play(soundScource);
 
         StartCoroutine(MiniGameLoop());
     }
@@ -54,6 +61,7 @@ public class MiniGame : MonoBehaviour
             Finish(resultsStrength, resultsHealth, resultsSpeed);
 
         finished = true;
+        uiSound.Play(UIManager.instance.GetComponent<AudioSource>());
         gladiator.Anim.SetBool("Training", false);
     }
 
@@ -72,6 +80,7 @@ public class MiniGame : MonoBehaviour
         var placeLeft = true;
         var totalCount = 0;
         var successCount = 0;
+        var hasTouchedEnd = false;
 
         var difficulty = GameManager.instance.PlayerData.CombinedStats();
 
@@ -82,11 +91,12 @@ public class MiniGame : MonoBehaviour
 
         // While the minigame is ongoing
         while(onGoing) {
-            // Place the green zone
-            if(!placedGreenZone) {
 
-                var minSize = Mathf.Clamp(80 - difficulty, 30, 80);
-                var maxSize = Mathf.Clamp(120 - difficulty, 50, 120);
+            // Place the green zone
+            if(!placedGreenZone && hasTouchedEnd) {
+
+                var minSize = Mathf.Clamp(100 - difficulty * 1.5f, 35, 80);
+                var maxSize = Mathf.Clamp(140 - difficulty * 1.5f, 50, 120);
 
                 greenZone.sizeDelta = new Vector2(Random.Range(minSize, maxSize), greenZone.sizeDelta.y);
                 greenZone.anchoredPosition = new Vector2(Random.Range((placeLeft) ? -greenZone.sizeDelta.x : greenZone.sizeDelta.x, (placeLeft) ? -maxSize + greenZone.sizeDelta.x / 2 : maxSize - greenZone.sizeDelta.x / 2), greenZone.anchoredPosition.y);
@@ -95,19 +105,32 @@ public class MiniGame : MonoBehaviour
                 placeLeft = !placeLeft;
             }
 
-            currentSpeed = Mathf.Lerp(currentSpeed, currentSpeed + (0.008f * totalCount), 0.1f);
+            currentSpeed = Mathf.Lerp(currentSpeed, currentSpeed + (0.01f * totalCount), 0.1f);
 
             // Move the marker
-            marker.anchoredPosition = new Vector2(Mathf.Sin((Time.time * 1.5f) + currentSpeed) * parentWidth, marker.anchoredPosition.y);
+            marker.anchoredPosition = new Vector2(Mathf.Sin((Time.time * 1.6f + (0.05f * difficulty)) + currentSpeed) * parentWidth, marker.anchoredPosition.y);
+
+            // Wait for the marker to touch an end before starting
+            if(!hasTouchedEnd) {
+                greenZone.sizeDelta = new Vector2(0f, greenZone.sizeDelta.y);
+
+                if(Mathf.Abs(marker.anchoredPosition.x) > parentWidth - 30f) {
+                    hasTouchedEnd = true;
+                    placeLeft = (marker.anchoredPosition.x > 0);
+                }
+            }
+
 
             // See if we are in the green zone
-            if(!inGreenZone
+            if(hasTouchedEnd 
+                &&!inGreenZone
                 && marker.anchoredPosition.x < (greenZone.anchoredPosition.x + greenZone.sizeDelta.x / 2)
                 && marker.anchoredPosition.x > greenZone.anchoredPosition.x - greenZone.sizeDelta.x / 2) {
                 inGreenZone = true;
             }
 
-            if(inGreenZone
+            if(hasTouchedEnd
+                && inGreenZone
                 && (marker.anchoredPosition.x > (greenZone.anchoredPosition.x + greenZone.sizeDelta.x / 2)
                 || marker.anchoredPosition.x < greenZone.anchoredPosition.x - greenZone.sizeDelta.x / 2)) {
                 inGreenZone = false;
@@ -116,12 +139,14 @@ public class MiniGame : MonoBehaviour
                 countText.text = "Count: " + totalCount;
                 statusText.text = "Fail!";
                 gladiator.Anim.SetTrigger("Fail");
-                gladiator.PlayLiftSound();
+                gladiator.PlayLiftSound(false);
+
+                failSound.Play(soundScource);
 
                 statusText.color = Color.red;
             }
 
-            if(Input.GetKeyDown(KeyCode.Space) && inGreenZone) {
+            if((Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Fire1")) && inGreenZone && hasTouchedEnd) {
                 placedGreenZone = !placedGreenZone;
                 inGreenZone = false;
                 successCount++;
@@ -129,7 +154,9 @@ public class MiniGame : MonoBehaviour
                 countText.text = "Count: " + totalCount;
                 statusText.text = "Success!";
                 gladiator.Anim.SetTrigger("Success");
-                gladiator.PlayLiftSound();
+                gladiator.PlayLiftSound(true);
+
+                succeedSound.Play(soundScource);
 
                 statusText.color = Color.green;
             }
@@ -137,6 +164,7 @@ public class MiniGame : MonoBehaviour
             if(totalCount >= 10) {
                 onGoing = false;
             }
+            
             yield return null;
         }
 

@@ -10,7 +10,7 @@ public static class CharacterGenerator
             Strength = baseStats,
             Health = baseStats,
             Speed = baseStats,
-            Hype = 0,
+            Hype = 1,
             LifeValue = 100,
             Weapon = new ItemData {
                 Name = "Shitty Sword",
