@@ -45,17 +45,17 @@ public static class OfferGenerator
 
             if(rand <= 0.5f)
                 data.Strength++;
-            else if(rand <= 0.7f & rand2 <= 0.5f) {
+            else if(rand <= 0.75f && rand2 <= 0.75f) {
                 data.Health++;
             }
-            else if(rand <= 0.7f & rand2 > 0.5f) {
+            else if(rand <= 0.75f && rand2 > 0.75f) {
                 data.Health--;
                 i--;
             }
-            else if(rand <= 1f & rand2 <= 0.5f) {
+            else if(rand <= 1f && rand2 <= 0.75f) {
                 data.Speed++;
             }
-            else if(rand <= 0.7f & rand2 > 0.5f) {
+            else if(rand <= 1f && rand2 > 0.75f) {
                 data.Speed--;
                 i--;
             }
@@ -74,17 +74,17 @@ public static class OfferGenerator
 
             if(rand <= 0.5f)
                 data.Health++;
-            else if(rand <= 0.7f & rand2 <= 0.5f) {
+            else if(rand <= 0.75f && rand2 <= 0.5f) {
                 data.Strength++;
             }
-            else if(rand <= 0.7f & rand2 > 0.5f) {
+            else if(rand <= 0.75f && rand2 > 0.5f) {
                 data.Strength--;
                 i--;
             }
-            else if(rand <= 1f & rand2 <= 0.5f) {
+            else if(rand <= 1f && rand2 <= 0.5f) {
                 data.Speed++;
             }
-            else if(rand <= 0.7f & rand2 > 0.5f) {
+            else if(rand <= 1f && rand2 > 0.5f) {
                 data.Speed--;
                 i--;
             }

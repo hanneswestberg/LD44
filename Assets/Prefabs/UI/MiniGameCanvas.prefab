@@ -782,13 +782,11 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Time the <color=yellow>yellow</color> bar and press SPACE when it is inside
-    the <color=green>green</color> area.
+  m_Text: 'Time the <color=yellow>yellow</color> bar and <color=green>CLICK</color>
+    when it is inside the <color=green>green</color> area.
 
 
-    You have 10 attempts.
-
-    The training fails if you fail 3 times'
+    You have 10 attempts.'
 --- !u!114 &173148227204047737
 MonoBehaviour:
   m_ObjectHideFlags: 0

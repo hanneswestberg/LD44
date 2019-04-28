@@ -79,8 +79,8 @@ public class Gladiator : MonoBehaviour
         healthValue.text = CurrentHealth.ToString();
         nameText.text = Data.Name;
 
-        leftArm.localScale = Vector3.one + (Vector3.one * 0.1f * Data.Strength) - (Vector3.one * 0.5f);
-        rightArm.localScale = Vector3.one + (Vector3.one * 0.1f * Data.Strength) - (Vector3.one * 0.5f);
+        leftArm.localScale = Vector3.one + (Vector3.one * 0.06f * Data.Strength) - (Vector3.one * 0.25f);
+        rightArm.localScale = Vector3.one + (Vector3.one * 0.06f * Data.Strength) - (Vector3.one * 0.25f);
         graphics.localScale = Vector3.one + (Vector3.one * 0.02f * Data.Strength) - (Vector3.one * 0.25f);
 
         body.materials[1].color = Data.SkinColor;

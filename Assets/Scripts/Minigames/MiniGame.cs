@@ -95,8 +95,8 @@ public class MiniGame : MonoBehaviour
             // Place the green zone
             if(!placedGreenZone && hasTouchedEnd) {
 
-                var minSize = Mathf.Clamp(100 - difficulty * 1.5f, 35, 80);
-                var maxSize = Mathf.Clamp(140 - difficulty * 1.5f, 50, 120);
+                var minSize = Mathf.Clamp(100 - difficulty * 2.5f, 35, 80);
+                var maxSize = Mathf.Clamp(140 - difficulty * 2.5f, 50, 120);
 
                 greenZone.sizeDelta = new Vector2(Random.Range(minSize, maxSize), greenZone.sizeDelta.y);
                 greenZone.anchoredPosition = new Vector2(Random.Range((placeLeft) ? -greenZone.sizeDelta.x : greenZone.sizeDelta.x, (placeLeft) ? -maxSize + greenZone.sizeDelta.x / 2 : maxSize - greenZone.sizeDelta.x / 2), greenZone.anchoredPosition.y);
@@ -105,10 +105,10 @@ public class MiniGame : MonoBehaviour
                 placeLeft = !placeLeft;
             }
 
-            currentSpeed = Mathf.Lerp(currentSpeed, currentSpeed + (0.01f * totalCount), 0.1f);
+            currentSpeed = Mathf.Lerp(currentSpeed, currentSpeed + (0.015f * totalCount), 0.1f);
 
             // Move the marker
-            marker.anchoredPosition = new Vector2(Mathf.Sin((Time.time * 1.6f + (0.05f * difficulty)) + currentSpeed) * parentWidth, marker.anchoredPosition.y);
+            marker.anchoredPosition = new Vector2(Mathf.Sin((Time.time * 1.6f + (0.08f * difficulty)) + currentSpeed) * parentWidth, marker.anchoredPosition.y);
 
             // Wait for the marker to touch an end before starting
             if(!hasTouchedEnd) {
@@ -163,8 +163,9 @@ public class MiniGame : MonoBehaviour
 
             if(totalCount >= 10) {
                 onGoing = false;
+                miniGameParent.SetActive(false);
             }
-            
+
             yield return null;
         }
 

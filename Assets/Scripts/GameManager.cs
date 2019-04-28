@@ -28,10 +28,12 @@ public class GameManager : MonoBehaviour
     // Arena variables
     public List<Gladiator> LivingGladiators { get; private set; }
     private Gladiator player;
-    private GladiatorBarrack barrackGladiator;
+    [HideInInspector] public GladiatorBarrack barrackGladiator;
     private int numberOfFights;
     private int numberOfPlayerKills;
     private float oldValue;
+    private bool lostLastFight;
+    private bool firstStart = true;
 
     // References
     public UnitData PlayerData { get; private set; }
@@ -42,7 +44,7 @@ public class GameManager : MonoBehaviour
             DontDestroyOnLoad(gameObject);
 
             // Generate the player
-            PlayerData = CharacterGenerator.GenerateCharacter(5, 0);
+            PlayerData = CharacterGenerator.GenerateCharacter(3, 3);
             PlayerData.Name = CharacterGenerator.GenerateName();
             PlayerData.SkinColor = Color.Lerp(new Color(53f, 36f, 21f) / 255f, new Color(231f, 178f, 132f) / 255f, Random.Range(0f, 1f));
 
@@ -102,7 +104,7 @@ public class GameManager : MonoBehaviour
             NavMeshHit hit;
             NavMesh.SamplePosition(Random.insideUnitSphere * 15f, out hit, Mathf.Infinity, NavMesh.AllAreas);
             GameObject enemyGO = Instantiate(enemyPrefab, hit.position, Quaternion.identity);
-            UnitData enemyData = CharacterGenerator.GenerateCharacter(1, 6 + numberOfFights * 4);
+            UnitData enemyData = CharacterGenerator.GenerateCharacter(1, 6 + numberOfFights * 3);
             enemyData.SkinColor = Color.Lerp(new Color(53f, 36f, 21f) / 255f, new Color(231f, 178f, 132f) / 255f, Random.Range(0f, 1f));
             enemyData.Name = CharacterGenerator.GenerateName();
             enemyGO.GetComponent<Gladiator>().SetUnitData(enemyData);
@@ -114,6 +116,7 @@ public class GameManager : MonoBehaviour
 
         // Start the arena loop
         StartCoroutine(ArenaLoop());
+        firstStart = false;
     }
 
     /// <summary>
@@ -122,11 +125,35 @@ public class GameManager : MonoBehaviour
     void StartBarracks() {
         UIManager.instance.EnableStats(true);
 
-        GameObject gladGO = Instantiate(barrackGladiatorPrefab, new Vector3(-2.3f, 0, 0f), Quaternion.Euler(new Vector3(0, -200f, 0)));
+        GameObject gladGO = Instantiate(barrackGladiatorPrefab, new Vector3(0.75f, 0, -0.9f), Quaternion.Euler(new Vector3(0, -140f, 0)));
         barrackGladiator = gladGO.GetComponent<GladiatorBarrack>();
 
-        bool hasOffer = CheckOffers(PlayerData.LifeValue, oldValue);
-        if (!hasOffer) StartMiniGame();
+        if(lostLastFight) {
+            var rand = Random.Range(0f, 1f);
+            if(rand <= 0.33f) {
+                UIManager.instance.NewInjury("Strength", Random.Range(1, 3));
+            }
+            else if(rand <= 0.66f) {
+                UIManager.instance.NewInjury("Health", Random.Range(1, 3));
+            }
+            else {
+                UIManager.instance.NewInjury("Speed", Random.Range(1, 3));
+            }
+        }
+
+        if(!firstStart) {
+            bool hasOffer = CheckOffers(PlayerData.LifeValue, oldValue);
+            if(!hasOffer) StartMiniGame();
+        }
+        else {
+            UIManager.instance.ShowCharacterCreator();
+        }
+
+        firstStart = false;
+    }
+
+    public void CharacterDone() {
+        StartCoroutine(LoadSceneDelay("Arena"));
     }
 
     public void StartMiniGame() {
@@ -139,7 +166,7 @@ public class GameManager : MonoBehaviour
             PlayerData.Health += hp;
             PlayerData.Speed += spd;
             UIManager.instance.UpdateUI();
-            StartCoroutine(LoadSceneDelay());
+            StartCoroutine(LoadSceneDelay("Arena"));
         };
     }
 
@@ -160,27 +187,32 @@ public class GameManager : MonoBehaviour
 
         if (player.IsAlive)
         {
-            newValue = oldValue + (PlayerData.CombinedStats() * PlayerData.Hype);
+            newValue = oldValue + (PlayerData.CombinedStats() * 2 * PlayerData.Hype);
             PlayerData.Hype += numberOfPlayerKills;
+            lostLastFight = false;
         }
         else
         {
             newValue =  oldValue - (LivingGladiators.Count * 10);
             PlayerData.Hype = 1;
+            lostLastFight = true;
         }
+
 
         numberOfFights++;
         PlayerData.LifeValue = newValue;
+
+        UIManager.instance.UpdateUI();
 
         yield return new WaitForSeconds(3f);
 
         SceneManager.LoadScene("Barracks");
     }
 
-    private IEnumerator LoadSceneDelay() {
+    private IEnumerator LoadSceneDelay(string scene) {
         yield return new WaitForSeconds(1f);
 
-        SceneManager.LoadScene("Arena");
+        SceneManager.LoadScene(scene);
     }
 
     public void TakeOffer(OfferData data)

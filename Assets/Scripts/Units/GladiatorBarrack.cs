@@ -37,6 +37,10 @@ public class GladiatorBarrack : MonoBehaviour
         }
 
 
+        UpdateMaterials();
+    }
+
+    public void UpdateMaterials() {
         body.materials[1].color = data.SkinColor;
         foreach(var bodyPart in bodyParts) {
             bodyPart.material.color = data.SkinColor;
