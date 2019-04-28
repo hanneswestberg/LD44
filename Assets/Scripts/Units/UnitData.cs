@@ -1,4 +1,6 @@
-﻿public class ItemData
+﻿using UnityEngine;
+
+public class ItemData
 {
     public string Name { get; set; }
 
@@ -8,6 +10,14 @@
 
     // 0 - 3, bronze, silver, gold, diamond
     public int Rarity { get; set; }
+}
+
+public class OfferData
+{
+    public string Name { get; set; }
+
+    public ItemData Weapon { get; set; }
+    public ItemData Armor { get; set; }
 }
 
 public class UnitData
@@ -23,6 +33,8 @@ public class UnitData
 
     public ItemData Weapon { get; set; }
     public ItemData Armor { get; set; }
+
+    public Color SkinColor { get; set; }
 
     public int CombinedStats() {
         return Strength + Health + Speed;

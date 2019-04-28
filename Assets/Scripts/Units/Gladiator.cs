@@ -38,6 +38,9 @@ public class Gladiator : MonoBehaviour
     [SerializeField] protected Transform rightArm;
     [SerializeField] protected Transform graphics;
 
+    [SerializeField] protected List<Renderer> bodyParts = new List<Renderer>();
+    [SerializeField] protected Renderer body;
+
     [Header("Settings:")]
     [SerializeField, Range(0f, 5f)] protected float attackDistance;
     [SerializeField, Range(0f, 5f)] protected float attackCooldown;
@@ -67,12 +70,18 @@ public class Gladiator : MonoBehaviour
         IsAlive = true;
 
         // UI
-        healthBarCanvas.enabled = false;
+        healthBarCanvas.enabled = true;
+        healthValue.text = CurrentHealth.ToString();
         nameText.text = Data.Name;
 
         leftArm.localScale = Vector3.one + (Vector3.one * 0.05f * Data.Strength) - (Vector3.one * 0.25f);
         rightArm.localScale = Vector3.one + (Vector3.one * 0.05f * Data.Strength) - (Vector3.one * 0.25f);
         graphics.localScale = Vector3.one + (Vector3.one * 0.05f * Data.Strength) - (Vector3.one * 0.25f);
+
+        body.materials[1].color = Data.SkinColor;
+        foreach(var bodyPart in bodyParts) {
+            bodyPart.material.color = Data.SkinColor;
+        }
     }
 
     protected virtual void Update() {

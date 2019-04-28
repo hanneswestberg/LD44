@@ -43,8 +43,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79564468eb10d5846b0a15684af9ea16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugMode: 1
   playerPrefab: {fileID: 3976115693882786461, guid: c3f31543a62374e46ad45c09c113769e,
     type: 3}
   enemyPrefab: {fileID: 3886811596740141962, guid: 73c2086f08e411743b25fe8f55daf16b,
+    type: 3}
+  barrackGladiatorPrefab: {fileID: 3976115693882786461, guid: 0ed19274e5106934fa9a3a597bb87e55,
+    type: 3}
+  miniGamePrefab: {fileID: 3206105488727336130, guid: 8a0f79710291c7b43af666dae343702a,
     type: 3}

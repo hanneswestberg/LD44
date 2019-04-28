@@ -17,10 +17,13 @@ public class GameManager : MonoBehaviour
     [Header("References")]
     [SerializeField] private GameObject playerPrefab;
     [SerializeField] private GameObject enemyPrefab;
+    [SerializeField] private GameObject barrackGladiatorPrefab;
+    [SerializeField] private GameObject miniGamePrefab;
 
     // Arena variables
     public List<Gladiator> LivingGladiators { get; private set; }
     private Gladiator player;
+    private GladiatorBarrack barrackGladiator;
     private int numberOfFights;
     private int numberOfPlayerKills;
 
@@ -35,6 +38,8 @@ public class GameManager : MonoBehaviour
             // Generate the player
             PlayerData = CharacterGenerator.GenerateCharacter(5, 0);
             PlayerData.Name = CharacterGenerator.GenerateName();
+            PlayerData.SkinColor = Color.Lerp(new Color(53f, 36f, 21f) / 255f, new Color(231f, 178f, 132f) / 255f, Random.Range(0f, 1f));
+
             numberOfFights = 0;
 
             // Subscribes to the scene loaded event
@@ -85,6 +90,7 @@ public class GameManager : MonoBehaviour
             NavMesh.SamplePosition(Random.insideUnitSphere * 15f, out hit, Mathf.Infinity, NavMesh.AllAreas);
             GameObject enemyGO = Instantiate(enemyPrefab, hit.position, Quaternion.identity);
             UnitData enemyData = CharacterGenerator.GenerateCharacter(1, 6 + numberOfFights * 3);
+            enemyData.SkinColor = Color.Lerp(new Color(53f, 36f, 21f) / 255f, new Color(231f, 178f, 132f) / 255f, Random.Range(0f, 1f));
             enemyData.Name = CharacterGenerator.GenerateName();
             enemyGO.GetComponent<Gladiator>().SetUnitData(enemyData);
             enemyGO.name = string.Format("Gladiator Enemy {0}", i);
@@ -101,19 +107,25 @@ public class GameManager : MonoBehaviour
     void StartBarracks() {
         UIManager.instance.EnableStats(true);
 
+        GameObject gladGO = Instantiate(barrackGladiatorPrefab, new Vector3(-2.3f, 0, 0f), Quaternion.Euler(new Vector3(0, -200f, 0)));
+        barrackGladiator = gladGO.GetComponent<GladiatorBarrack>();
+        // Display the minigame options here
+        StartMiniGame();
+
         StartCoroutine(BaracksLoop());
     }
 
-    void StartMiniGameStrength() {
-        StartCoroutine(MiniGameStrengthLoop());
-    }
+    public void StartMiniGame() {
+        GameObject miniGameGO = Instantiate(miniGamePrefab, Vector3.zero, Quaternion.identity);
+        MiniGame miniGame = miniGameGO.GetComponent<MiniGame>();
+        miniGame.StartMiniGame(barrackGladiator);
 
-    void StartMiniGameHealth() {
-        StartCoroutine(MiniGameHealthLoop());
-    }
-
-    void StartMiniGameSpeed() {
-        StartCoroutine(MiniGameSpeedLoop());
+        miniGame.OnMiniGameFinish += (srt, hp, spd) => {
+            PlayerData.Strength += srt;
+            PlayerData.Health += hp;
+            PlayerData.Speed += spd;
+            UIManager.instance.UpdateUI();
+        };
     }
 
     private IEnumerator ArenaLoop() {
@@ -136,55 +148,30 @@ public class GameManager : MonoBehaviour
     private IEnumerator BaracksLoop() {
 
         // Here we wait for the player to choose offer and minigame
-
         yield return null;
     }
 
-    private IEnumerator MiniGameStrengthLoop() {
-        var success = false;
-        var onGoing = false;
-
-        // While the minigame is ongoing
-        while(onGoing) {
-            // Calculate success here
-            success = true;
-
-            yield return null;
-        }
-
-        // Give reward to player if won;
-        PlayerData.Strength += (success) ? 1 : 0;
+    public void TakeOffer(OfferData data)
+    {
+        PlayerData.Weapon = data.Weapon;
+        PlayerData.Armor = data.Armor;
+        UIManager.instance.UpdateUI();
     }
 
-    private IEnumerator MiniGameHealthLoop() {
-        var success = false;
-        var onGoing = false;
+    private void CheckOffers(int newValue, int oldValue)
+    {
+        float rng = Random.Range(0, 1);
+        if (rng < 0.5) return; // no offers today
 
-        // While the minigame is ongoing
-        while(onGoing) {
-            // Calculate success here
-            success = true;
-
-            yield return null;
+        if (newValue >= oldValue)
+        {
+            OfferData off0 = OfferGenerator.GenerateOffer(newValue);
+            OfferData off1 = OfferGenerator.GenerateOffer(newValue);
         }
-
-        // Give reward to player if won;
-        PlayerData.Health += (success) ? 1 : 0;
+        else
+        {
+            OfferData off0 = OfferGenerator.GenerateOffer(newValue);
+        }
     }
 
-    private IEnumerator MiniGameSpeedLoop() {
-        var success = false;
-        var onGoing = false;
-
-        // While the minigame is ongoing
-        while(onGoing) {
-            // Calculate success here
-            success = true;
-
-            yield return null;
-        }
-
-        // Give reward to player if won;
-        PlayerData.Speed += (success) ? 1 : 0;
-    }
 }

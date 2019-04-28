@@ -635,6 +635,12 @@ MonoBehaviour:
   leftArm: {fileID: 6483439958780404186}
   rightArm: {fileID: 1348672447529593394}
   graphics: {fileID: 497337303001489735}
+  bodyParts:
+  - {fileID: 1611588845837484964}
+  - {fileID: 2849828444015883579}
+  - {fileID: 7730330821161753484}
+  - {fileID: 5922174937975288250}
+  body: {fileID: 389750344746872999}
   attackDistance: 1
   attackCooldown: 1.5
   rigidbody: {fileID: 4904399371012577907}

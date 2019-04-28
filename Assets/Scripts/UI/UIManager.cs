@@ -5,6 +5,8 @@ public class UIManager : MonoBehaviour
 {
     public static UIManager instance;
 
+    private UIOfferGenerator offerGen;
+
     [Header("Settings:")]
     [SerializeField] private Button toggleMusicButton;
     [SerializeField] private Button toggleSoundButton;
@@ -21,29 +23,14 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Text playerStatHealth;
     [SerializeField] private Text playerStatSpeed;
 
-    [Space(10)]
-    [SerializeField] private Text playerWeaponName;
-    [SerializeField] private Text playerWeaponStrength;
-    [SerializeField] private Text playerWeaponHealth;
-    [SerializeField] private Text playerWeaponSpeed;
-
-    [Space(10)]
-    [SerializeField] private Text playerArmorName;
-    [SerializeField] private Text playerArmorStrength;
-    [SerializeField] private Text playerArmorHealth;
-    [SerializeField] private Text playerArmorSpeed;
+    [SerializeField] private GameObject itemPrefab;
+    private ItemUI weapon;
+    private ItemUI armor;
 
     // Internal variables:
     private bool isMusicOn = true;
     private bool isSoundOn = true;
     private UnitData playerData;
-
-    private Color[] rarityColors = new Color[] {
-        new Color(0.80f, 0.50f, 0.20f), // bronze
-        new Color(0.75f, 0.75f, 0.75f), // silver
-        new Color(1.0f, 0.84f, 0.0f), // gold
-        new Color(0.44f, 0.82f, 0.88f) // diamond blue
-    };
 
     private void Awake() {
         if(instance == null) {
@@ -57,8 +44,16 @@ public class UIManager : MonoBehaviour
 
     private void Start() {
         playerData = GameManager.instance.PlayerData;
+        offerGen = GetComponent<UIOfferGenerator>();
+        NewOffers(OfferGenerator.GenerateOffer(1), OfferGenerator.GenerateOffer(1));
 
-        if(playerData != null) {
+        GameObject weapon_inst = Instantiate(itemPrefab, playerStats.transform);
+        GameObject armor_inst = Instantiate(itemPrefab, playerStats.transform);
+
+        weapon = weapon_inst.GetComponent<ItemUI>();
+        armor = armor_inst.GetComponent<ItemUI>();
+
+        if (playerData != null) {
             UpdateUI();
         }
     }
@@ -78,6 +73,17 @@ public class UIManager : MonoBehaviour
         // Do stuff here
     }
 
+    public void NewOffers(OfferData off0, OfferData off1)
+    {
+        offerGen.CreateOffer(off0);
+        offerGen.CreateOffer(off1);
+    }
+
+    public void Sold(OfferData offer)
+    {
+
+    }
+
     public void UpdateUI()
     {
         playerValue.text = "Value " + playerData.LifeValue + " denarii";
@@ -88,17 +94,23 @@ public class UIManager : MonoBehaviour
         playerStatHealth.text = "Health " + playerData.Health;
         playerStatSpeed.text = "Speed " + playerData.Speed;
 
+        weapon.NewValues(playerData.Weapon);
+        armor.NewValues(playerData.Armor, -70);
+        /*
         // weapon
         playerWeaponName.text = playerData.Weapon.Name;
         playerWeaponName.color = rarityColors[playerData.Weapon.Rarity];
         playerWeaponStrength.text = "Str " + playerData.Weapon.Strength;
         playerWeaponHealth.text = "Hp " + playerData.Weapon.Health;
         playerWeaponSpeed.text = "Spd " + playerData.Weapon.Speed;
+
         // armor
         playerArmorName.text = playerData.Armor.Name;
         playerArmorName.color = rarityColors[playerData.Armor.Rarity];
         playerArmorStrength.text = "Str " + playerData.Armor.Strength;
         playerArmorHealth.text = "Hp " + playerData.Armor.Health;
         playerArmorSpeed.text = "Spd " + playerData.Armor.Speed;
+        */
     }
+
 }
