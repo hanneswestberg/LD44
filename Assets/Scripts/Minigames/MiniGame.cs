@@ -216,9 +216,9 @@ public class MiniGame : MonoBehaviour
         resultHeadingText.text = "The training was a " + ((results > 0) ? "Success" : "Failure");
         resultHeadingText.color = (results > 0) ? Color.green : Color.red;
 
-        string descText = (resultsStrength != 0) ? (resultsStrength > 0) ? "Gain " + "+" + resultsStrength + " Strength \n" : "Lose " + resultsStrength + " Strength \n" : "";
-        descText += (resultsHealth != 0) ? (resultsHealth > 0) ? "Gain " + "+" + resultsHealth + " Health \n" : "Lose " + resultsHealth + " Health \n" : "";
-        descText += (resultsSpeed != 0) ?  (resultsSpeed > 0) ? "Gain " + "+" + resultsSpeed + " Speed \n" : "Lose " + resultsSpeed + " Speed \n" : "";
+        string descText = (resultsStrength != 0) ? (resultsStrength > 0) ? "Gain " + "+" + resultsStrength + " Strength \n\n" : "Lose " + resultsStrength + " Strength \n\n" : "";
+        descText += (resultsHealth != 0) ? (resultsHealth > 0) ? "Gain " + "+" + resultsHealth + " Health \n\n" : "Lose " + resultsHealth + " Health \n\n" : "";
+        descText += (resultsSpeed != 0) ?  (resultsSpeed > 0) ? "Gain " + "+" + resultsSpeed + " Speed \n\n" : "Lose " + resultsSpeed + " Speed \n\n" : "";
 
         resultDescriptionText.text = descText;
         resultDescriptionText.color = (results > 0) ? Color.green : Color.red;

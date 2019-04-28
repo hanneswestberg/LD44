@@ -34,6 +34,7 @@ public class GameManager : MonoBehaviour
     private float oldValue;
     private bool lostLastFight;
     private bool firstStart = true;
+    public bool tutorial = true;
 
     // References
     public UnitData PlayerData { get; private set; }
@@ -114,8 +115,16 @@ public class GameManager : MonoBehaviour
 
         }
 
-        // Start the arena loop
-        StartCoroutine(ArenaLoop());
+        if (firstStart)
+        {
+            UIManager.instance.ShowArenaTutorial();
+            StartCoroutine(TutorialPause());
+        }
+        else
+        {
+            // Start the arena loop
+            StartCoroutine(ArenaLoop());
+        }
         firstStart = false;
     }
 
@@ -149,7 +158,14 @@ public class GameManager : MonoBehaviour
             UIManager.instance.ShowCharacterCreator();
         }
 
-        firstStart = false;
+    }
+
+    IEnumerator TutorialPause() {
+        while(tutorial)
+        {
+            yield return null;
+        }
+        StartCoroutine(ArenaLoop());
     }
 
     public void CharacterDone() {

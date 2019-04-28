@@ -47,26 +47,16 @@ public static class CharacterGenerator
     }
 
     public static string GenerateName() {
-        string namePath = "Assets/Text/Names.txt";
-        StreamReader namesReader = new StreamReader(namePath);
-        string[] names = namesReader.ReadToEnd().Split('\n');
-        namesReader.Close();
-
-        string adjectivesPath = "Assets/Text/Adjectives.txt";
-        StreamReader adjectivesReader = new StreamReader(adjectivesPath);
-        string[] adj = adjectivesReader.ReadToEnd().Split('\n');
-        adjectivesReader.Close();
+        var allNames = Resources.Load<TextAsset>("Names");
+        string[] names = allNames.text.Split('\n');
 
         return UppercaseFirst(names[Random.Range(0, names.Length)]) + " the " + GetAdjective();
     }
 
     public static string GetAdjective() {
-        string path = "Assets/Text/Adjectives.txt";
+        var allAdj = Resources.Load<TextAsset>("Adjectives");
+        string[] adj = allAdj.text.Split('\n');
 
-        StreamReader reader = new StreamReader(path);
-        string[] adj = reader.ReadToEnd().Split('\n');
-
-        reader.Close();
         return UppercaseFirst(adj[Random.Range(0, adj.Length)]);
     }
 

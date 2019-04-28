@@ -7,6 +7,9 @@ public class UIManager : MonoBehaviour
 
     public UIOfferGenerator offerGenerator;
 
+    [SerializeField] private GameObject enterScreen;
+    [SerializeField] private GameObject arenaTutorial;
+
     [Header("Settings:")]
     [SerializeField] private Button toggleMusicButton;
     [SerializeField] private Button toggleSoundButton;
@@ -33,9 +36,12 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject characterCreatorPanel;
     [SerializeField] private Text characterNameText;
 
+    [SerializeField] private SimpleAudioEvent uiSound;
+
 
     private ItemUI weapon;
     private ItemUI armor;
+    private AudioSource audioSource;
 
     // Internal variables:
     private bool isMusicOn = true;
@@ -51,6 +57,7 @@ public class UIManager : MonoBehaviour
             DontDestroyOnLoad(gameObject);
             injuryPanel.SetActive(false);
             characterCreatorPanel.SetActive(false);
+            audioSource = GetComponent<AudioSource>();
 
         }
         else {
@@ -60,7 +67,7 @@ public class UIManager : MonoBehaviour
 
     private void Start() {
         playerData = GameManager.instance.PlayerData;
-        characterNameText.text = "Name: " + playerData.Name;
+        characterNameText.text = "Name: <color=green>" + playerData.Name + "</color>";
 
         GameObject weapon_inst = Instantiate(itemPrefab, playerStats.transform);
         GameObject armor_inst = Instantiate(itemPrefab, playerStats.transform);
@@ -71,6 +78,13 @@ public class UIManager : MonoBehaviour
         if (playerData != null) {
             UpdateUI();
         }
+
+        Instantiate(enterScreen);
+    }
+
+    public void ShowArenaTutorial()
+    {
+        Instantiate(arenaTutorial);
     }
 
     public void ShowCharacterCreator() {
@@ -79,17 +93,20 @@ public class UIManager : MonoBehaviour
 
     public void NewNameButton() {
         playerData.Name = CharacterGenerator.GenerateName();
-        characterNameText.text = "Name: " + playerData.Name;
+        characterNameText.text = "Name: <color=green>" + playerData.Name + "</color>";
+        uiSound.Play(audioSource);
     }
 
     public void NewSkinButton() {
         playerData.SkinColor = Color.Lerp(new Color(53f, 36f, 21f) / 255f, new Color(231f, 178f, 132f) / 255f, Random.Range(0f, 1f));
         GameManager.instance.barrackGladiator.UpdateMaterials();
+        uiSound.Play(audioSource);
     }
 
     public void CharacterDone() {
         GameManager.instance.CharacterDone();
         characterCreatorPanel.SetActive(false);
+        uiSound.Play(audioSource);
     }
 
     public void EnableStats(bool enable) 
@@ -105,6 +122,7 @@ public class UIManager : MonoBehaviour
     public void ToggleSounds() {
         isSoundOn = !isSoundOn;
         // Do stuff here
+        AudioListener.pause = !isSoundOn;
     }
 
     public void NewOffers(OfferData off0, OfferData off1)
@@ -127,6 +145,8 @@ public class UIManager : MonoBehaviour
                 playerData.Speed -= currentAmount;
             }
             currentInjury = "";
+            uiSound.Play(audioSource);
+            UpdateUI();
         }
     }
 
