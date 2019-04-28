@@ -1,13 +1,15 @@
 ﻿using UnityEngine;
+using System.IO;
+
 
 public static class CharacterGenerator
 {
-    public static UnitData GenerateCharacter(int extraStats) {
+    public static UnitData GenerateCharacter(int baseStats, int extraStats) {
 
         var unit = new UnitData() {
-            Strength = 5,
-            Health = 5,
-            Speed = 5,
+            Strength = baseStats,
+            Health = baseStats,
+            Speed = baseStats,
             Hype = 0,
             LifeValue = 100,
             Weapon = new ItemData {
@@ -42,5 +44,36 @@ public static class CharacterGenerator
         }
 
         return unit;
+    }
+
+    public static string GenerateName() {
+        string namePath = "Assets/Text/Names.txt";
+        StreamReader namesReader = new StreamReader(namePath);
+        string[] names = namesReader.ReadToEnd().Split('\n');
+        namesReader.Close();
+
+        string adjectivesPath = "Assets/Text/Adjectives.txt";
+        StreamReader adjectivesReader = new StreamReader(adjectivesPath);
+        string[] adj = adjectivesReader.ReadToEnd().Split('\n');
+        adjectivesReader.Close();
+
+        return UppercaseFirst(names[Random.Range(0, names.Length)]) + " the " + GetAdjective();
+    }
+
+    public static string GetAdjective() {
+        string path = "Assets/Text/Adjectives.txt";
+
+        StreamReader reader = new StreamReader(path);
+        string[] adj = reader.ReadToEnd().Split('\n');
+
+        reader.Close();
+        return UppercaseFirst(adj[Random.Range(0, adj.Length)]);
+    }
+
+    static string UppercaseFirst(string s) {
+        if(string.IsNullOrEmpty(s)) {
+            return string.Empty;
+        }
+        return char.ToUpper(s[0]) + s.Substring(1);
     }
 }

@@ -22,11 +22,10 @@ public class GameManager : MonoBehaviour
     public List<Gladiator> LivingGladiators { get; private set; }
     private Gladiator player;
     private int numberOfFights;
-
+    private int numberOfPlayerKills;
 
     // References
     public UnitData PlayerData { get; private set; }
-
 
     private void Awake() {
         if(instance == null) {
@@ -34,9 +33,11 @@ public class GameManager : MonoBehaviour
             DontDestroyOnLoad(gameObject);
 
             // Generate the player
-            PlayerData = CharacterGenerator.GenerateCharacter(0);
+            PlayerData = CharacterGenerator.GenerateCharacter(5, 0);
+            PlayerData.Name = CharacterGenerator.GenerateName();
             numberOfFights = 0;
 
+            // Subscribes to the scene loaded event
             SceneManager.sceneLoaded -= OnSceneLoaded;
             SceneManager.sceneLoaded += OnSceneLoaded;
         }
@@ -45,7 +46,11 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // Start is called before the first frame update
+    /// <summary>
+    /// Called on the load of the scene
+    /// </summary>
+    /// <param name="scene"></param>
+    /// <param name="mode"></param>
     void OnSceneLoaded(Scene scene, LoadSceneMode mode) {
         // Start the real game with the correct scene
         if(SceneManager.GetActiveScene().name == "Arena")
@@ -60,13 +65,18 @@ public class GameManager : MonoBehaviour
     void StartArena() {
         // Initialize
         LivingGladiators = new List<Gladiator>();
+        UIManager.instance.EnableStats(false);
+        numberOfPlayerKills = 0;
 
         // Spawn the player on the map
-        GameObject playerGO = Instantiate(playerPrefab, Vector3.zero, Quaternion.identity);
+        NavMeshHit playerhit;
+        NavMesh.SamplePosition(Random.insideUnitSphere * 15f, out playerhit, Mathf.Infinity, NavMesh.AllAreas);
+        GameObject playerGO = Instantiate(playerPrefab, playerhit.position, Quaternion.identity);
         Gladiator playerGlad = playerGO.GetComponent<Gladiator>();
         playerGlad.SetUnitData(PlayerData);
         playerGO.name = "Player";
         player = playerGlad;
+        playerGlad.OnUnitKilled += () => { numberOfPlayerKills++; };
         LivingGladiators.Add(playerGlad);
 
         // Spawn the enemies on the map
@@ -74,32 +84,107 @@ public class GameManager : MonoBehaviour
             NavMeshHit hit;
             NavMesh.SamplePosition(Random.insideUnitSphere * 15f, out hit, Mathf.Infinity, NavMesh.AllAreas);
             GameObject enemyGO = Instantiate(enemyPrefab, hit.position, Quaternion.identity);
-            enemyGO.GetComponent<Gladiator>().SetUnitData(CharacterGenerator.GenerateCharacter(numberOfFights * 3));
+            UnitData enemyData = CharacterGenerator.GenerateCharacter(1, 6 + numberOfFights * 3);
+            enemyData.Name = CharacterGenerator.GenerateName();
+            enemyGO.GetComponent<Gladiator>().SetUnitData(enemyData);
             enemyGO.name = string.Format("Gladiator Enemy {0}", i);
             LivingGladiators.Add(enemyGO.GetComponent<Gladiator>());
         }
 
-        UIManager.instance.EnableStats(false);
         // Start the arena loop
         StartCoroutine(ArenaLoop());
     }
 
+    /// <summary>
+    /// Starts the baracks
+    /// </summary>
     void StartBarracks() {
         UIManager.instance.EnableStats(true);
+
+        StartCoroutine(BaracksLoop());
+    }
+
+    void StartMiniGameStrength() {
+        StartCoroutine(MiniGameStrengthLoop());
+    }
+
+    void StartMiniGameHealth() {
+        StartCoroutine(MiniGameHealthLoop());
+    }
+
+    void StartMiniGameSpeed() {
+        StartCoroutine(MiniGameSpeedLoop());
     }
 
     private IEnumerator ArenaLoop() {
-
         // Start the loop
         while(LivingGladiators.Count > 1 && player.IsAlive) {
             yield return null;
         }
 
+        numberOfFights++;
+        // Give hype to the player depending on the fight
+        PlayerData.Hype += numberOfPlayerKills;
+        // Calculate life value
+        PlayerData.LifeValue = PlayerData.CombinedStats() * PlayerData.Hype;
+
         yield return new WaitForSeconds(3f);
 
-        numberOfFights++;
-
         SceneManager.LoadScene("Barracks");
-        // Stop the arena
+    }
+
+    private IEnumerator BaracksLoop() {
+
+        // Here we wait for the player to choose offer and minigame
+
+        yield return null;
+    }
+
+    private IEnumerator MiniGameStrengthLoop() {
+        var success = false;
+        var onGoing = false;
+
+        // While the minigame is ongoing
+        while(onGoing) {
+            // Calculate success here
+            success = true;
+
+            yield return null;
+        }
+
+        // Give reward to player if won;
+        PlayerData.Strength += (success) ? 1 : 0;
+    }
+
+    private IEnumerator MiniGameHealthLoop() {
+        var success = false;
+        var onGoing = false;
+
+        // While the minigame is ongoing
+        while(onGoing) {
+            // Calculate success here
+            success = true;
+
+            yield return null;
+        }
+
+        // Give reward to player if won;
+        PlayerData.Health += (success) ? 1 : 0;
+    }
+
+    private IEnumerator MiniGameSpeedLoop() {
+        var success = false;
+        var onGoing = false;
+
+        // While the minigame is ongoing
+        while(onGoing) {
+            // Calculate success here
+            success = true;
+
+            yield return null;
+        }
+
+        // Give reward to player if won;
+        PlayerData.Speed += (success) ? 1 : 0;
     }
 }

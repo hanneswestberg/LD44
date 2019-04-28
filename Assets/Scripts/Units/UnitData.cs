@@ -12,6 +12,8 @@
 
 public class UnitData
 {
+    public string Name { get; set; }
+
     public int Strength { get; set; }
     public int Health { get; set; }
     public int Speed { get; set; }
@@ -21,4 +23,8 @@ public class UnitData
 
     public ItemData Weapon { get; set; }
     public ItemData Armor { get; set; }
+
+    public int CombinedStats() {
+        return Strength + Health + Speed;
+    }
 }

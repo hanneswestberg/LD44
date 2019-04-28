@@ -15,7 +15,6 @@ public class GladiatorPlayer : Gladiator
 
         if(IsAlive) {
             if(Input.GetButton("Fire1") && canAttack) {
-
                 foreach(var target in playerTargets.ValidTargets) {
                     Attack(target);
                 }
@@ -27,7 +26,7 @@ public class GladiatorPlayer : Gladiator
     private void FixedUpdate() {
         if(IsAlive) {
             var moveForward = transform.forward * Input.GetAxis("Vertical");
-            rigidbody.MovePosition(transform.position + (moveForward * 0.08f) + (moveForward * 0.08f) * (0.1f * Data.Speed));
+            rigidbody.MovePosition(transform.position + (moveForward * 0.07f) + (moveForward * 0.07f) * (0.1f * Data.Speed));
 
             transform.Rotate(new Vector3(0f, Input.GetAxis("Horizontal") * 4f, 0f));
 

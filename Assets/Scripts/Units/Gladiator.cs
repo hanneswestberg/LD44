@@ -1,6 +1,9 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 public class Gladiator : MonoBehaviour
 {
@@ -26,6 +29,11 @@ public class Gladiator : MonoBehaviour
     [SerializeField] protected SimpleAudioEvent dieSound;
     [SerializeField] protected Canvas healthBarCanvas;
     [SerializeField] protected RectTransform healthBar;
+    [SerializeField] protected Text healthValue;
+    [SerializeField] protected GameObject hitTextPrefab;
+    [SerializeField] protected ParticleSystem bloodParticles; 
+    [SerializeField] protected Text nameText;
+
     [SerializeField] protected Transform leftArm;
     [SerializeField] protected Transform rightArm;
     [SerializeField] protected Transform graphics;
@@ -33,6 +41,9 @@ public class Gladiator : MonoBehaviour
     [Header("Settings:")]
     [SerializeField, Range(0f, 5f)] protected float attackDistance;
     [SerializeField, Range(0f, 5f)] protected float attackCooldown;
+
+
+    public Action OnUnitKilled;
 
 
     // Internal variables
@@ -57,10 +68,11 @@ public class Gladiator : MonoBehaviour
 
         // UI
         healthBarCanvas.enabled = false;
+        nameText.text = Data.Name;
 
         leftArm.localScale = Vector3.one + (Vector3.one * 0.05f * Data.Strength) - (Vector3.one * 0.25f);
         rightArm.localScale = Vector3.one + (Vector3.one * 0.05f * Data.Strength) - (Vector3.one * 0.25f);
-        graphics.localScale = Vector3.one + (Vector3.one * 0.05f * Random.Range(-3f, Data.Strength));
+        graphics.localScale = Vector3.one + (Vector3.one * 0.05f * Data.Strength) - (Vector3.one * 0.25f);
     }
 
     protected virtual void Update() {
@@ -77,7 +89,7 @@ public class Gladiator : MonoBehaviour
 
         animator.SetTrigger("Attack");
 
-        if(IsAlive && target != null && target.TakeDamage(Data.Strength * 2f)) {
+        if(IsAlive && target != null && target.TakeDamage(this, Data.Strength * 2f)) {
             attackSound.Play(audioSource);
         }
     }
@@ -87,7 +99,7 @@ public class Gladiator : MonoBehaviour
     /// </summary>
     /// <param name="amount">The amount of damage</param>
     /// <returns>If the gladiator took damage</returns>
-    public virtual bool TakeDamage(float amount) {
+    public virtual bool TakeDamage(Gladiator attacker, float amount) {
         if(IsAlive) {
             CurrentHealth = Mathf.Clamp(CurrentHealth - amount, 0, maxHealth);
 
@@ -99,7 +111,9 @@ public class Gladiator : MonoBehaviour
                 GetComponent<CapsuleCollider>().enabled = false;
                 GetComponent<Rigidbody>().isKinematic = true;
 
-                //transform.GetChild(0).rotation = new Quaternion(90f, transform.rotation.y, transform.rotation.z, 0);
+                // Callback to the attacker that we died
+                if(attacker.OnUnitKilled != null)
+                    attacker.OnUnitKilled.Invoke();
             }
             else {
                 takeDamageSound.Play(audioSource);
@@ -109,6 +123,11 @@ public class Gladiator : MonoBehaviour
             // Update UI
             healthBarCanvas.enabled = (CurrentHealth < maxHealth && IsAlive);
             healthBar.sizeDelta = new Vector2((CurrentHealth / maxHealth) * 100f, healthBar.sizeDelta.y);
+            healthValue.text = CurrentHealth.ToString();
+            GameObject go = Instantiate(hitTextPrefab, transform);
+            go.transform.localPosition = new Vector3(0f, 2.2f, 0f);
+            go.GetComponent<HitValueScript>().Value = amount;
+            bloodParticles.Play();
 
             return true;
         }
